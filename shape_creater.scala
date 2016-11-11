@@ -1,3 +1,0 @@
-class shape_creater {
-  
-}

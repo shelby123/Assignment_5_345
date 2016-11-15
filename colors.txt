@@ -1,0 +1,342 @@
+Black 0
+Night 788746
+Gunmetal 2897209
+Midnight 2824983
+Charcoal 3418156
+Dark Slate Grey 2439228
+Oil 3879217
+Black Cat 4274233
+Iridium 4013114
+Black Eel 4603455
+Black Cow 4998726
+Gray Wolf 5261899
+Vampire Gray 5656657
+Gray Dolphin 6051928
+Carbon Gray 6446429
+Ash Gray 6710114
+Cloudy Gray 7170408
+Smokey Gray 7499373
+Gray 7565166
+Granite 8617596
+Battleship Gray 8684674
+Gray Cloud 11974324
+Gray Goose 13750478
+Platinum 15066338
+Metallic Silver 12371660
+Blue Gray 10006471
+Light Slate Gray 7175053
+Slate Gray 6648707
+Jet Gray 6385022
+Mist Blue 6581630
+Marble Blue 5664126
+Slate Blue 7568545
+Steel Blue 4744096
+Blue Jay 2839678
+Dark Slate Blue 2832470
+Midnight Blue 1383252
+Navy Blue 128
+Blue Whale 3419518
+Lapis Blue 1388926
+Denim Dark Blue 1383309
+Earth Blue 160
+Cobalt Blue 8386
+Blueberry Blue 16834
+Sapphire Blue 2446535
+Blue Eyes 1403335
+Royal Blue 2842846
+Blue Orchid 2049532
+Blue Lotus 6906092
+Light Slate Blue 7564031
+Windows Blue 3505863
+Glacial Blue Ice 3574721
+Silk Blue 4754119
+Blue Ivy 3182791
+Blue Koi 6659783
+Columbia Blue 8892359
+Baby Blue 9812423
+Light Steel Blue 7507918
+Ocean Blue 2844140
+Blue Ribbon 3174143
+Blue Dress 1408492
+Dodger Blue 1411583
+Cornflower Blue 6591981
+Sky Blue 6723839
+Butterfly Blue 3714284
+Iceberg 5678572
+Crystal Blue 6075391
+Deep Sky Blue 3914239
+Denim Blue 7977708
+Light Sky Blue 8571642
+Day Sky Blue 8571647
+Jeans Blue 10538988
+Blue Angel 12046060
+Pastel Blue 11849708
+Sea Blue 12771327
+Powder Blue 13033215
+Coral Blue 11525356
+Light Blue 11395071
+Robin Egg Blue 12447231
+Pale Blue Lily 13626604
+Light Cyan 14745599
+Water 15463674
+AliceBlue 15792383
+Azure 15794175
+Light Slate 13434879
+Light Aquamarine 9699304
+Electric Blue 10157823
+Aquamarine 8388564
+Cyan or Aqua 65535
+Tron Blue 8257022
+Blue Zircon 5766911
+Blue Lagoon 9366508
+Celeste 5303276
+Blue Diamond 5169900
+Tiffany Blue 8509648
+Cyan Opaque 9619399
+Blue Hosta 7847879
+Northern Lights Blue 7915463
+Medium Turquoise 4771021
+Turquoise 4441819
+Jellyfish 4638663
+Blue green 8113333
+Macaw Blue Green 4440007
+Light Sea Green 4106655
+Dark Turquoise 3906716
+Sea Turtle Green 4427136
+Medium Aquamarine 3442561
+Greenish Blue 3177854
+Grayish Turquoise 6192510
+Beetle Green 5011582
+Teal 32896
+Sea Green 5146997
+Camouflage Green 7898731
+Sage Green 8686457
+Hazel Green 6388824
+Venom Green 7506944
+Fern Green 6716454
+Dark Forest Green 2441495
+Medium Sea Green 3172180
+Medium Forest Green 3437109
+Seaweed Green 4422679
+Pine Green 3701828
+Jungle Green 3439660
+Shamrock Green 3439639
+Medium Spring Green 3440663
+Forest Green 5149272
+Green Onion 6988065
+Spring Green 4890668
+Lime Green 4301591
+Clover Green 4104277
+Green Snake 7125820
+Alien Green 7128087
+Green Apple 5030935
+Yellow Green 5427223
+Kelly Green 5031250
+Zombie Green 5555569
+Frog Green 10077838
+Green Peas 9028444
+Dollar Bill Green 8764261
+Dark Sea Green 9155457
+Iguana Green 10268785
+Avocado Green 11715144
+Pistachio Green 10338825
+Salad Green 10602805
+Hummingbird Green 8382487
+Nebula Green 5892119
+Stoplight Go Green 5761380
+Algae Green 6613382
+Jade Green 6224750
+Green 65280
+Emerald Green 6290199
+Lawn Green 8910615
+Chartreuse 9108247
+Dragon Green 7011218
+Mint green 10026904
+Green Thumb 11922090
+Light Jade 12844472
+Tea Green 13433693
+Green Yellow 11664151
+Slime Green 12380500
+Goldenrod 15587956
+Harvest Gold 15590005
+Sun Yellow 16771196
+Yellow 16776960
+Corn Yellow 16774016
+Parchment 16777154
+Cream 16777164
+Lemon Chiffon 16775366
+Cornsilk 16775388
+Beige 16119260
+Blonde 16512729
+AntiqueWhite 16444375
+Champagne 16246734
+BlanchedAlmond 16772045
+Vanilla 15984043
+Tan Brown 15525302
+Peach 16770484
+Mustard 16767832
+Rubber Ducky Yellow 16766977
+Bright Gold 16633879
+Golden brown 15384855
+Macaroni and Cheese 15907686
+Saffron 16496919
+Beer 16494871
+Cantaloupe 16754223
+Bee Yellow 15313687
+Brown Sugar 14853999
+BurlyWood 14596231
+Deep Peach 16763812
+Ginger Brown 13221474
+School Bus Yellow 15246103
+Sandy Brown 15637069
+Fall Leaf Brown 13153632
+Orange Gold 13934615
+Sand 12759680
+Cookie Brown 13083415
+Caramel 13012503
+Brass 11904578
+Khaki 11381102
+Camel brown 12687979
+Bronze 13467442
+Tiger Orange 13140289
+Cinnamon 12945687
+Bullet Shell 11508576
+Dark Goldenrod 11499543
+Copper 12088115
+Wood 9858867
+Oak Brown 8414487
+Moccasin 8550457
+Army Brown 8551264
+Sandstone 7892319
+Mocha 4799782
+Taupe 4734002
+Coffee 7294519
+Brown Bear 8608827
+Red Dirt 8344087
+Sepia 8341036
+Orange Salmon 12874833
+Rust 12804673
+Red Fox 12802071
+Chocolate 13130263
+Sedona 13395456
+Papaya Orange 15034135
+Halloween Orange 15100972
+Pumpkin Orange 16282135
+Construction Cone Orange 16282673
+Sunrise Orange 15103057
+Mango Orange 16744512
+Dark Orange 16285719
+Coral 16744272
+Basket Ball Orange 16286040
+Light Salmon 16356971
+Tangerine 15174241
+Dark Salmon 14781291
+Light Coral 15168625
+Bean Red 16211289
+Valentine Red 15029329
+Shocking Orange 15031100
+Red 16711680
+Scarlet 16720896
+Ruby Red 16130583
+Ferrari Red 16190746
+Fire Engine Red 16132119
+Lava Red 14950935
+Love Red 14949143
+Grapefruit 14432287
+Chestnut Red 12798508
+Cherry Red 12731969
+Mahogany 12599296
+Chilli Pepper 12655383
+Cranberry 10420239
+Red Wine 10027026
+Burgundy 9175066
+Chestnut 9782581
+Blood Red 8271127
+Sienna 9060631
+Sangria 8271895
+Firebrick 8389911
+Maroon 8455489
+Plum Pie 8193345
+Velvet Maroon 8271181
+Plum Velvet 8193362
+Rosy Finch 8343122
+Puce 8346200
+Dull Purple 8344157
+Rosy Brown 11764865
+Khaki Rose 12947598
+Pink Bow 12878217
+Lipstick Pink 12879763
+Rose 15248810
+Rose Gold 15517120
+Desert Sand 15583663
+Pig Pink 16635876
+Cotton Candy 16572415
+Pink Bubblegum 16768989
+Misty Rose 16497593
+Pink 16428990
+Light Pink 16428986
+Flamingo Pink 16361392
+Pink Rose 15180208
+Pink Daisy 15178147
+Cadillac Pink 14912174
+Carnation Pink 16218273
+Blush Red 15036052
+Hot Pink 16146603
+Watermelon Pink 16542853
+Violet Red 16135562
+Deep Pink 16066695
+Pink Cupcake 14966429
+Pink Lemonade 14952572
+Neon Pink 16070058
+Magenta 16711935
+Dimorphotheca Magenta 14889373
+Bright Neon Pink 16004095
+Pale Violet Red 13723015
+Tulip Pink 12737148
+Medium Violet Red 13247083
+Rogue Pink 12658793
+Burnt Pink 12657255
+Bashful Pink 12735107
+Dark Carnation Pink 12657283
+Plum 12139407
+Viola Purple 8280190
+Purple Iris 5708670
+Plum Purple 5781337
+Indigo 4915330
+Purple Monster 4594558
+Purple Haze 5126270
+Eggplant 6373457
+Grape 6183552
+Purple Jam 6957182
+Dark Orchid 8199038
+Purple Flower 10963655
+Medium Orchid 11552949
+Purple Amethyst 7089607
+Dark Violet 8662478
+Violet 9255113
+Purple Sage Bush 8019399
+Lovely Purple 8337644
+Purple 9319919
+Aztech Purple 8993791
+Medium Purple 8677335
+Jasmine Purple 10632172
+Purple Daffodil 11551231
+Tyrian Purple 12868332
+Crocus Purple 9532140
+Purple Mimosa 10386431
+Heliotrope Purple 13918975
+Crimson 14825708
+Purple Dragon 12816071
+Lilac 13148872
+Blush Pink 15116780
+Mauve 14725375
+Wisteria Purple 13020871
+Blossom Pink 16365567
+Thistle 13810131
+Periwinkle 15323116
+Lavender Pinocchio 15457762
+Lavender blue 14935290
+Pearl 16641780
+SeaShell 16774638
+Milk White 16710911
+White 16777215

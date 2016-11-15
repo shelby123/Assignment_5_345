@@ -9,6 +9,10 @@ import java.util.Scanner;
 class ShapeCreator {
   
 }
+
+
+
+
 class Colors { 
       // construct the colors hashmap when a new colors object is declared
       var colors: HashMap[String, Int] = new HashMap[String, Int]();
@@ -33,6 +37,10 @@ class Colors {
 }
 
 
+
+
+
+
 abstract class BaseShape {
   var name: String = "";
   var x: Int = 0;
@@ -54,10 +62,18 @@ abstract class BaseShape {
     return this;
   }
   
+  def UPDATE : this.type = {
+    return this;
+  }
+  
   def duplicate(newName: String): BaseShape
   
   def draw(graphics: Graphics, xAdj: Int, yAdj: Int)
 }
+
+
+
+
 
 abstract class Shape extends BaseShape {
   var color: Color = new Color(0, 0, 0);
@@ -79,6 +95,11 @@ abstract class Shape extends BaseShape {
     return this;
   }
 }
+
+
+
+
+
 
 class Circle extends Shape {
   var radius: Int = 0;
@@ -110,6 +131,11 @@ class Circle extends Shape {
     return newCircle;
   }
 }
+
+
+
+
+
 
 class Oval extends Shape {
   var radiusX: Int = 0;
@@ -148,6 +174,10 @@ class Oval extends Shape {
     return newOval;
   }
 }
+
+
+
+
 
 class Rectangle extends Shape {
   var width: Int = 0;
@@ -218,6 +248,11 @@ class Square extends Shape {
   }
 }
 
+
+
+
+
+
 class Triangle extends Shape {
   var base: Int = 0;
   var height: Int = 0;
@@ -262,6 +297,11 @@ class Triangle extends Shape {
     return Array(y + height + yAdj, y + height + yAdj, y + yAdj);
   }
 }
+
+
+
+
+
 
 class Polygon extends Shape {
   var side: Int = 0;
@@ -317,6 +357,9 @@ class Polygon extends Shape {
 }
 
 
+
+
+
 class Squiggle extends Shape {
   val VERT = "VERTICAL"
   
@@ -343,7 +386,7 @@ class Squiggle extends Shape {
     return this;
   }
   def IS(choice: String): this.type = {
-    this.vert = VERT.equals(choice);
+    this.vert = VERT.equals(choice.toUpperCase());
     return this;
   }
   
@@ -352,7 +395,7 @@ class Squiggle extends Shape {
     if(this.vert)
       VertSquiggle(graphics, xAdj+this.x, yAdj+this.y, this.height, this.width, this.numPeriods, this.thickness);
     else
-      HorSquiggle(graphics, xAdj+this.x, yAdj+this.y, this.height, this.width, this.numPeriods, this.thickness);
+      HorSquiggle(graphics, yAdj+this.y, xAdj+this.x, this.height, this.width, this.numPeriods, this.thickness);
 
   }
    def VertSquiggle(g:Graphics, x:Int, y:Int, height:Int, width:Int, numPeriods:Double, thickness:Int) {
@@ -422,10 +465,14 @@ class Squiggle extends Shape {
   }
 }
 
+
+
+
+
 class Composite extends BaseShape {
   var shapes: ArrayList[BaseShape] = new ArrayList[BaseShape]();
   var duplicate: Boolean = false;
-   var shapeMap: Map[String, BaseShape] = new HashMap[String, BaseShape]();
+  var shapeMap: Map[String, BaseShape] = new HashMap[String, BaseShape]();
 
   
   def FROM(shapes: String*): Composite = {
@@ -439,12 +486,54 @@ class Composite extends BaseShape {
     return this;
   }
   
-  def addShape(shape: BaseShape, newName: String, duplicate: Boolean) {
-    if (duplicate) {
-      this.shapes.add(0, shape.duplicate(newName));
-    } else {
-      this.shapes.add(0, shape);
+  /* TODO: fix this better
+   def GET(shapeName: String): Nothing = {
+    for (i <- 0 to shapes.size() - 1) {
+      var currShape: BaseShape = shapes.get(i);
+      if (shapeName.equals(currShape.name)) {
+        return currShape;
+      }
     }
+    return null;
+  } */
+  
+  def ADD(shapeName: String, duplicate: String) {
+    addShape(shapeMap.get(shapeName), shapeName, "DUPLICATE".equals(duplicate.toUpperCase()));
+  }
+  
+  def ADD(shapeName: String) {
+    addShape(shapeMap.get(shapeName), shapeName, duplicate);
+  }
+  
+  def addShape(shape: BaseShape, newName: String, duplicate: Boolean) {
+    // Duplicate finding
+    var maxTag: Int = 0;
+    for (i <- 0 to shapes.size() - 1) {
+      var shapeString: String = shapes.get(i).name;
+      if (shapeString.length() >= newName.length()) {
+        if (shapeString.substring(0, newName.length).equals(newName)) {
+          if (shapeString.length() != newName.length()) {
+            var currTag: Int = Integer.parseInt(shapeString.substring(newName.length() + 1, shapeString.length()));
+            if (currTag > maxTag) {
+              maxTag = currTag;
+            }
+          }
+        }
+      }
+    }
+    
+    // Will always add tag
+    var useMe: String = newName + '-' + (maxTag + 1);
+    
+    if (duplicate) {
+      this.shapes.add(shape.duplicate(useMe));
+    } else {
+      this.shapes.add(shape);
+    }
+  }
+  
+  def REMOVE(shapeName: String) {
+    removeShape(shapeName);
   }
   
   def removeShape(newName: String) {
@@ -504,11 +593,17 @@ class CommandRead {
     def TRI(triName: String): Triangle = {
       return shapeMap.get(triName).asInstanceOf[Triangle];
     }
+    
     def POLY(polyName: String): Polygon = {
       return shapeMap.get(polyName).asInstanceOf[Polygon];
     }
+    
     def SQUIGGLE(squiggleName: String): Squiggle = {
       return shapeMap.get(squiggleName).asInstanceOf[Squiggle];
+    }
+    
+    def COMPOSITE(compositeName: String): Composite = {
+      return shapeMap.get(compositeName).asInstanceOf[Composite];
     }
   }
   

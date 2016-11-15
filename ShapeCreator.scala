@@ -3,10 +3,35 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.File;
+import java.util.Scanner;
 
 class ShapeCreator {
   
 }
+class Colors { 
+      // construct the colors hashmap when a new colors object is declared
+      var colors: HashMap[String, Int] = new HashMap[String, Int]();
+      val location: String = "colors.txt";
+      val f:File = new File(location);
+      val sc:Scanner = new Scanner(f);
+      while(sc.hasNextLine()) {
+        val lSc: Scanner = new Scanner(sc.nextLine());
+        var name:String = lSc.next();
+        while(!lSc.hasNextInt()) {
+          name = name + " " +  lSc.next();
+        }
+        name = name.toLowerCase();
+        val hex:Int = lSc.nextInt();
+        colors.put(name, hex);
+      }
+      
+  def getNumber(name:String):Int =  {
+        return colors.get(name.toLowerCase());
+  }
+  
+}
+
 
 abstract class BaseShape {
   var name: String = "";
@@ -37,6 +62,7 @@ abstract class BaseShape {
 abstract class Shape extends BaseShape {
   var color: Color = new Color(0, 0, 0);
   var fill: Boolean = true;
+  var colorMap:Colors = new Colors();
   
   def COLOR(r: Int, g: Int, b: Int): this.type = {
     this.color = new Color(r, g, b);
@@ -44,7 +70,7 @@ abstract class Shape extends BaseShape {
   }
   
   def COLOR(color: String): this.type = {
-    // TODO: string pattern matching?
+    this.color = new Color(colorMap.getNumber(color));
     return this;
   }
   
@@ -237,6 +263,164 @@ class Triangle extends Shape {
   }
 }
 
+class Polygon extends Shape {
+  var side: Int = 0;
+  var numPoints: Int = 0;
+  
+  def SIDE(side: Int): this.type = {
+    this.side = side;
+    return this;
+  }
+  
+  def POINTS(numPoints: Int): this.type = {
+    this.numPoints = numPoints;
+    return this;
+  }
+  
+  override def draw(graphics: Graphics, xAdj: Int, yAdj: Int) {
+    graphics.setColor(this.color);
+    if(this.fill) {
+      graphics.fillPolygon(generatePolyX(x, side, numPoints), generatePolyY(y, side, numPoints), numPoints)
+    } else {
+      graphics.drawPolygon(generatePolyX(x, side, numPoints), generatePolyY(y, side, numPoints), numPoints)
+    }
+    
+  }
+  private def generatePolyX(x:Int, side:Int, numPoints:Int):Array[Int] = {
+    val xVals:Array[Int] = new Array(numPoints);
+    for(i <- 0 to (numPoints - 1) ) {
+      xVals(i) = (x + side*Math.cos(2*Math.PI * ((i+1.0)/numPoints) + Math.PI/2) + side).toInt; 
+    }
+    return xVals;
+  }
+  private def generatePolyY(y:Int, side:Int, numPoints:Int):Array[Int] = {
+    val yVals:Array[Int] = new Array(numPoints);
+    for(i <- 0 to (numPoints - 1) ) {
+      yVals(i) = (y+ side*Math.sin(2*Math.PI * ((i+1.0)/numPoints) - Math.PI/2) + side).toInt; 
+    }
+    return yVals;
+  }
+  
+  override def duplicate(newName: String): Polygon = {
+    var newPoly: Polygon = new Polygon();
+    
+    newPoly.name = newName;
+    newPoly.x = this.x;
+    newPoly.y = this.y;
+    newPoly.color = this.color;
+    newPoly.fill = this.fill;
+    
+    newPoly.numPoints = this.numPoints;
+    newPoly.side = this.side;
+    return newPoly;
+  }
+}
+
+
+class Squiggle extends Shape {
+  val VERT = "VERTICAL"
+  
+  var height: Int = 0;
+  var width: Int = 0;
+  var numPeriods: Int = 0;
+  var thickness: Int = 0;
+  var vert:Boolean = false;
+  def HEIGHT(height: Int): this.type = {
+    this.height = height;
+    return this;
+  }
+  
+  def WIDTH(width: Int): this.type = {
+    this.width = width;
+    return this;
+  }
+  def THICKNESS(thickness: Int): this.type = {
+    this.thickness = thickness;
+    return this;
+  }
+  def PERIODS(periods: Int): this.type = {
+    this.numPeriods = periods;
+    return this;
+  }
+  def IS(choice: String): this.type = {
+    this.vert = VERT.equals(choice);
+    return this;
+  }
+  
+  override def draw(graphics: Graphics, xAdj: Int, yAdj: Int) {
+    graphics.setColor(this.color);
+    if(this.vert)
+      VertSquiggle(graphics, xAdj+this.x, yAdj+this.y, this.height, this.width, this.numPeriods, this.thickness);
+    else
+      HorSquiggle(graphics, xAdj+this.x, yAdj+this.y, this.height, this.width, this.numPeriods, this.thickness);
+
+  }
+   def VertSquiggle(g:Graphics, x:Int, y:Int, height:Int, width:Int, numPeriods:Double, thickness:Int) {
+      //where precision represents the number of points in a period to generate
+      var precision:Int = height;
+      if(width < height)
+        precision = width;
+      g.fillPolygon(findSquiggleBounce(x, width, numPeriods, precision, thickness), findSquiggleConstant(y, height, numPeriods, precision),
+          precision*2);
+  }
+   def HorSquiggle(g:Graphics, x:Int, y:Int, height:Int, width:Int, numPeriods:Double, thickness:Int) {
+      //where precision represents the number of points in a period to generate
+      var precision:Int = height;
+      if(width < height)
+        precision = width;
+      g.fillPolygon (findSquiggleConstant(y, width, numPeriods, precision),findSquiggleBounce(x, height, numPeriods, precision, thickness),
+          precision*2);
+  }
+  
+  private def findSquiggleBounce(x:Int, width:Int, numPeriods:Double, precision:Int, thickness:Int):Array[Int] =  {
+      val length2:Int = precision*2;
+      val halfLength:Int = precision;
+      val numPointsInAPeriod = halfLength/numPeriods;
+      println("Length" + length2);
+      val xVals:Array[Int] = new Array(length2);
+      val offset = (thickness*1.0/2).toInt;
+      for(i<-0 to halfLength) {
+        xVals(i) = ((x + x*1.0/2 + width*Math.cos(2*Math.PI*i/numPointsInAPeriod))/2 + width/2 - offset).toInt;
+
+      }
+      for(i<- halfLength+1 to length2-1) {
+        xVals(i) = xVals(length2-i) + offset;
+      }
+      return xVals;
+  }
+  private def findSquiggleConstant(y:Int, height:Int, numPeriods:Double, precision:Int):Array[Int] =  {
+      val length:Int = precision*2;
+      val halfLength:Int = precision;
+      val yVals:Array[Int] = new Array(length);
+      var currentY = y;
+      for(i<-0 to halfLength) {
+        currentY = currentY + (height*1.0/halfLength).toInt;
+        yVals(i) = currentY;
+      }
+      for(i<-halfLength to length-1) {
+        yVals(i) = currentY;
+        currentY = currentY - (height*1.0/halfLength).toInt;
+      }
+      return yVals;
+  }   
+  
+  override def duplicate(newName: String): Squiggle = {
+    var newSquiggle: Squiggle = new Squiggle();
+    
+    newSquiggle.name = newName;
+    newSquiggle.x = this.x;
+    newSquiggle.y = this.y;
+    newSquiggle.color = this.color;
+    newSquiggle.fill = this.fill;
+    
+    newSquiggle height= this.height;
+    newSquiggle width = this.width;
+    newSquiggle numPeriods = this.numPeriods;
+    newSquiggle thickness = this.thickness;
+    newSquiggle vert = this.vert;
+    return newSquiggle;
+  }
+}
 
 class Composite extends BaseShape {
   var shapes: ArrayList[BaseShape] = new ArrayList[BaseShape]();
@@ -294,6 +478,8 @@ class Composite extends BaseShape {
   }
 }
 
+
+
 class CommandRead {
   var panelMap: Map[String, DrawingPanel] = new HashMap[String, DrawingPanel]();
   var shapeMap: Map[String, BaseShape] = new HashMap[String, BaseShape]();
@@ -317,6 +503,12 @@ class CommandRead {
     
     def TRI(triName: String): Triangle = {
       return shapeMap.get(triName).asInstanceOf[Triangle];
+    }
+    def POLY(polyName: String): Polygon = {
+      return shapeMap.get(polyName).asInstanceOf[Polygon];
+    }
+    def SQUIGGLE(squiggleName: String): Squiggle = {
+      return shapeMap.get(squiggleName).asInstanceOf[Squiggle];
     }
   }
   
@@ -361,6 +553,22 @@ class CommandRead {
       newTri.name = parameterName;
       shapeMap.put(parameterName, newTri);
       return newTri;
+    }
+  }
+  object NEWPOLY {
+    def WITHNAME(parameterName: String): Polygon = {
+      var newPoly: Polygon = new Polygon();
+      newPoly.name = parameterName;
+      shapeMap.put(parameterName, newPoly);
+      return newPoly;
+    }
+  }
+  object NEWSQUIGGLE {
+    def WITHNAME(parameterName: String): Squiggle = {
+      var newSquiggle: Squiggle = new Squiggle();
+      newSquiggle.name = parameterName;
+      shapeMap.put(parameterName, newSquiggle);
+      return newSquiggle;
     }
   }
   

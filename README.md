@@ -1,10 +1,14 @@
-### Welcome to PolyGO.
+# Welcome to PolyGO.
 
 A user experience like no other.  Create structured, beautiful, vibrant art at the touch of your fingertips.
+
+
 
 ## Visual. Graphic. Library.
 
 Easy to use, yet complex in design.  PolyGO takes away all the difficulty of programming and makes it fun and easy to use.  Simply use some of our pre-defined shapes or create your own.  The choice is yours.  In no time at all you can be the next Picasso with PolyGO.
+
+
 
 ## Just take a look at PolyGO:
 
@@ -18,7 +22,7 @@ SCALE stickFigure?
 DRAWTOPANEL redCircle
 
 ## Dive into the details:
-# Operations for defining shapes:
+### Operations for defining shapes:
 Rotate
 Scale
 	Stretch horizontally 
@@ -33,7 +37,7 @@ Change base shapes
 and any circles in the figure would become squares
 
 
-# Operations for screen display:
+### Operations for screen display:
 Move
 Create
 Delete

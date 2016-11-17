@@ -62,9 +62,11 @@ abstract class BaseShape {
     return this;
   }
   
-  def UPDATE : this.type = {
+  def scale(factor: Int): this.type
+  
+  /*def UPDATE : this.type = {
     return this;
-  }
+  }*/
   
   def duplicate(newName: String): BaseShape
   
@@ -486,8 +488,7 @@ class Composite extends BaseShape {
     return this;
   }
   
-  /* TODO: fix this better
-   def GET(shapeName: String): Nothing = {
+  private def get(shapeName: String): BaseShape = {
     for (i <- 0 to shapes.size() - 1) {
       var currShape: BaseShape = shapes.get(i);
       if (shapeName.equals(currShape.name)) {
@@ -495,7 +496,39 @@ class Composite extends BaseShape {
       }
     }
     return null;
-  } */
+  }
+   
+  def GETSQUARE(squareName: String): Square = {
+    return get(squareName).asInstanceOf[Square];
+  }
+  
+  def GETRECT(rectName: String): Rectangle = {
+    return get(rectName).asInstanceOf[Rectangle];
+  }
+  
+  def GETCIRCLE(circleName: String): Circle = {
+    return get(circleName).asInstanceOf[Circle];
+  }
+  
+  def GETOVAL(ovalName: String): Oval = {
+    return get(ovalName).asInstanceOf[Oval];
+  }
+  
+  def GETTRI(triName: String): Triangle = {
+    return get(triName).asInstanceOf[Triangle];
+  }
+  
+  def GETPOLY(polyName: String): Polygon = {
+    return get(polyName).asInstanceOf[Polygon];
+  }
+  
+  def GETSQUIGGLE(squiggleName: String): Squiggle = {
+    return get(squiggleName).asInstanceOf[Squiggle];
+  }
+  
+  def GETCOMPOSITE(compName: String): Composite = {
+    return get(compName).asInstanceOf[Composite];
+  }
   
   def ADD(shapeName: String, duplicate: String) {
     addShape(shapeMap.get(shapeName), shapeName, "DUPLICATE".equals(duplicate.toUpperCase()));
@@ -510,20 +543,24 @@ class Composite extends BaseShape {
     var maxTag: Int = 0;
     for (i <- 0 to shapes.size() - 1) {
       var shapeString: String = shapes.get(i).name;
-      if (shapeString.length() >= newName.length()) {
-        if (shapeString.substring(0, newName.length).equals(newName)) {
-          if (shapeString.length() != newName.length()) {
-            var currTag: Int = Integer.parseInt(shapeString.substring(newName.length() + 1, shapeString.length()));
-            if (currTag > maxTag) {
-              maxTag = currTag;
-            }
+      //println(shapeString);
+      
+      if (shapeString.length() >= newName.length() && shapeString.substring(0, newName.length).equals(newName)) {
+        if (shapeString.length() != newName.length() && shapeString.charAt(newName.length()) == '-') {
+          var currTag: Int = Integer.parseInt(shapeString.substring(newName.length() + 1, shapeString.length()));
+          if (currTag > maxTag) {
+            maxTag = currTag + 1;
           }
+        } else if (maxTag == 0) {
+          maxTag = 1;
         }
       }
     }
-    
-    // Will always add tag
-    var useMe: String = newName + '-' + (maxTag + 1);
+    // Add tag if duplicate
+    var useMe: String = newName;
+    if (maxTag > 0) {
+      useMe = newName + '-' + maxTag;
+    }
     
     if (duplicate) {
       this.shapes.add(shape.duplicate(useMe));

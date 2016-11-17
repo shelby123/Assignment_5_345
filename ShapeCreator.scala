@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +63,7 @@ abstract class BaseShape {
     return this;
   }
   
-  def scale(factor: Int): this.type
+  //def scale(factor: Int): this.type
   
 	/*
 	// method to do the calculations of a set of points about a point.
@@ -98,7 +99,7 @@ abstract class BaseShape {
   
   def duplicate(newName: String): BaseShape
   
-  def draw(graphics: Graphics, xAdj: Int, yAdj: Int)
+  def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int)
 }
 
 
@@ -139,7 +140,7 @@ class Circle extends Shape {
     return this;
   }
   
-  override def draw(graphics: Graphics, xAdj: Int, yAdj: Int) {
+  override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
     if (this.fill) {
       graphics.fillOval(this.x + xAdj, this.y + yAdj, radius * 2, radius * 2);
@@ -181,7 +182,7 @@ class Oval extends Shape {
     return this;
   }
   
-  override def draw(graphics: Graphics, xAdj: Int, yAdj: Int) {
+  override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
     if (this.fill) {
       graphics.fillOval(this.x + xAdj, this.y + yAdj, radiusX * 2, radiusY * 2);
@@ -223,7 +224,7 @@ class Rectangle extends Shape {
     return this;
   }
   
-  override def draw(graphics: Graphics, xAdj: Int, yAdj: Int) {
+  override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
     if (this.fill) {
       graphics.fillRect(this.x + xAdj, this.y + yAdj, this.width, this.height);
@@ -255,7 +256,7 @@ class Square extends Shape {
     return this;
   }
   
-  override def draw(graphics: Graphics, xAdj: Int, yAdj: Int) {
+  override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
     if (this.fill) {
       graphics.fillRect(this.x + xAdj, this.y + yAdj, this.side, this.side);
@@ -297,7 +298,7 @@ class Triangle extends Shape {
     return this;
   }
   
-  override def draw(graphics: Graphics, xAdj: Int, yAdj: Int) {
+  override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
     if (this.fill) {
 		  graphics.fillPolygon(getTriangleX(x, y, height, base, xAdj), getTriangleY(x, y, height, base, yAdj), 3);
@@ -347,7 +348,7 @@ class Polygon extends Shape {
     return this;
   }
   
-  override def draw(graphics: Graphics, xAdj: Int, yAdj: Int) {
+  override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
     if(this.fill) {
       graphics.fillPolygon(generatePolyX(x, side, numPoints), generatePolyY(y, side, numPoints), numPoints)
@@ -420,7 +421,7 @@ class Squiggle extends Shape {
     return this;
   }
   
-  override def draw(graphics: Graphics, xAdj: Int, yAdj: Int) {
+  override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
     if(this.vert)
       VertSquiggle(graphics, xAdj+this.x, yAdj+this.y, this.height, this.width, this.numPeriods, this.thickness);
@@ -428,7 +429,7 @@ class Squiggle extends Shape {
       HorSquiggle(graphics, yAdj+this.y, xAdj+this.x, this.height, this.width, this.numPeriods, this.thickness);
 
   }
-   def VertSquiggle(g:Graphics, x:Int, y:Int, height:Int, width:Int, numPeriods:Double, thickness:Int) {
+   def VertSquiggle(g:Graphics2D, x:Int, y:Int, height:Int, width:Int, numPeriods:Double, thickness:Int) {
       //where precision represents the number of points in a period to generate
       var precision:Int = height;
       if(width < height)
@@ -436,7 +437,7 @@ class Squiggle extends Shape {
       g.fillPolygon(findSquiggleBounce(x, width, numPeriods, precision, thickness), findSquiggleConstant(y, height, numPeriods, precision),
           precision*2);
   }
-   def HorSquiggle(g:Graphics, x:Int, y:Int, height:Int, width:Int, numPeriods:Double, thickness:Int) {
+   def HorSquiggle(g:Graphics2D, x:Int, y:Int, height:Int, width:Int, numPeriods:Double, thickness:Int) {
       //where precision represents the number of points in a period to generate
       var precision:Int = height;
       if(width < height)
@@ -610,7 +611,7 @@ class Composite extends BaseShape {
     }
   }
   
-  def draw(graphics: Graphics, xAdj: Int, yAdj: Int) {
+  def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     for (i <- 0 to shapes.size() - 1) {
       shapes.get(i).draw(graphics, xAdj, yAdj);
     }
@@ -736,7 +737,7 @@ class CommandRead {
     def apply(shapeName: String, panelName: String, x: Int, y: Int) {
       if (panelMap.containsKey(panelName) && shapeMap.containsKey(shapeName)) {
         var shape: BaseShape = shapeMap.get(shapeName);
-        var graphics: Graphics = panelMap.get(panelName).getGraphics();
+        var graphics: Graphics2D = panelMap.get(panelName).getGraphics();
         shape.draw(graphics, x, y);
       }
     }

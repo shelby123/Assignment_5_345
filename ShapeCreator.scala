@@ -64,6 +64,34 @@ abstract class BaseShape {
   
   def scale(factor: Int): this.type
   
+	/*
+	// method to do the calculations of a set of points about a point.
+	// takes in an array of xValues, an array of yValues, and rotates them about the
+  // center point (x,y). 
+  // rotation is a constant * IN DEGREES NOT RADIANS* 
+  def rotate(xVals:Array[Int], yVals:Array[Int], centerX:Int, centerY:Int): Array[Array[Int]] = {
+      assert (yVals.length == xVals.length);
+      var radians:Double = rotation*Math.PI/180;
+      val length = yVals.length;
+      var newXVals:Array[Int] = new Array(length);
+      var newYVals:Array[Int] = new Array(length);
+      for(i <- 0 to length-1) {
+        // translate the the point, rotate, translate the point. 
+        var tempX = (xVals(i)-centerX);
+        var tempY = yVals(i)-centerY;
+        var xRotated = tempX*Math.cos(radians) - tempY*Math.sin(radians);
+        var yRotated = tempX*Math.sin(radians) + tempY*Math.cos(radians);
+        var xNew = xRotated + centerX;
+        var yNew = yRotated + centerY;
+        newXVals(i) = xNew.toInt;
+        newYVals(i) = yNew.toInt;
+      }
+      var results = Array(newXVals, newYVals);
+      return results;
+  }
+	*/
+	
+	
   /*def UPDATE : this.type = {
     return this;
   }*/

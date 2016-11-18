@@ -1,11 +1,15 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.geom.AffineTransform;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.awt.TexturePaint;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.File;
 import java.util.Scanner;
+import javax.imageio.ImageIO;
 
 class ShapeCreator {
   
@@ -46,6 +50,7 @@ abstract class BaseShape {
   var name: String = "";
   var x: Int = 0;
   var y: Int = 0;
+  var rotation: Int = 0;
 
   def AT(x: Int, y: Int): this.type = {
     this.x = x;
@@ -65,32 +70,11 @@ abstract class BaseShape {
   
   //def scale(factor: Int): this.type
   
-	/*
-	// method to do the calculations of a set of points about a point.
-	// takes in an array of xValues, an array of yValues, and rotates them about the
-  // center point (x,y). 
-  // rotation is a constant * IN DEGREES NOT RADIANS* 
-  def rotate(xVals:Array[Int], yVals:Array[Int], centerX:Int, centerY:Int): Array[Array[Int]] = {
-      assert (yVals.length == xVals.length);
-      var radians:Double = rotation*Math.PI/180;
-      val length = yVals.length;
-      var newXVals:Array[Int] = new Array(length);
-      var newYVals:Array[Int] = new Array(length);
-      for(i <- 0 to length-1) {
-        // translate the the point, rotate, translate the point. 
-        var tempX = (xVals(i)-centerX);
-        var tempY = yVals(i)-centerY;
-        var xRotated = tempX*Math.cos(radians) - tempY*Math.sin(radians);
-        var yRotated = tempX*Math.sin(radians) + tempY*Math.cos(radians);
-        var xNew = xRotated + centerX;
-        var yNew = yRotated + centerY;
-        newXVals(i) = xNew.toInt;
-        newYVals(i) = yNew.toInt;
-      }
-      var results = Array(newXVals, newYVals);
-      return results;
+
+  def SETROTATE(rotation: Int): this.type = {
+    this.rotation = rotation;
+    return this;
   }
-	*/
 	
 	
   /*def UPDATE : this.type = {
@@ -100,6 +84,26 @@ abstract class BaseShape {
   def duplicate(newName: String): BaseShape
   
   def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int)
+  
+  def >>(shift: Int) : this.type = {
+    this.x += shift;
+    return this;
+  }
+  
+  def <<(shift: Int) : this.type = {
+    this.x -= shift;
+    return this;
+  }
+  
+  def ^^(shift: Int) : this.type = {
+    this.y -= shift;
+    return this;
+  }
+  
+  def vv(shift: Int) : this.type = {
+    this.y += shift;
+    return this;
+  }
 }
 
 
@@ -110,6 +114,7 @@ abstract class Shape extends BaseShape {
   var color: Color = new Color(0, 0, 0);
   var fill: Boolean = true;
   var colorMap:Colors = new Colors();
+  var sparkle:Boolean = false;
   
   def COLOR(r: Int, g: Int, b: Int): this.type = {
     this.color = new Color(r, g, b);
@@ -123,6 +128,12 @@ abstract class Shape extends BaseShape {
   
   def FILLSTATE(state: String): this.type = {
     this.fill = "outline".equals(state);
+    return this;
+  }
+  
+  def !! : this.type = {
+    sparkle = !sparkle;
+    
     return this;
   }
 }
@@ -142,11 +153,17 @@ class Circle extends Shape {
   
   override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
+    var transform = new AffineTransform();
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform);
     if (this.fill) {
       graphics.fillOval(this.x + xAdj, this.y + yAdj, radius * 2, radius * 2);
     } else {
       graphics.drawOval(this.x + xAdj, this.y + yAdj, radius * 2, radius * 2);
     }
+     var transform2 = new AffineTransform();
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform2);
   }
   
   override def duplicate(newName: String): Circle = {
@@ -184,11 +201,17 @@ class Oval extends Shape {
   
   override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
+    var transform = new AffineTransform();
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform);
     if (this.fill) {
       graphics.fillOval(this.x + xAdj, this.y + yAdj, radiusX * 2, radiusY * 2);
     } else {
       graphics.drawOval(this.x + xAdj, this.y + yAdj, radiusX * 2, radiusY * 2);
     }
+    var transform2 = new AffineTransform();
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform2);
   }
   
   override def duplicate(newName: String): Oval = {
@@ -226,11 +249,18 @@ class Rectangle extends Shape {
   
   override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
+    var transform = new AffineTransform();
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform);
     if (this.fill) {
       graphics.fillRect(this.x + xAdj, this.y + yAdj, this.width, this.height);
     } else {
       graphics.drawRect(this.x + xAdj, this.y + yAdj, this.width, this.height);
     }
+    var transform2 = new AffineTransform();
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform2);
+    
   }
   
   override def duplicate(newName: String): Rectangle = {
@@ -257,12 +287,22 @@ class Square extends Shape {
   }
   
   override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
-    graphics.setColor(this.color);
+    if (!sparkle) {
+      graphics.setColor(this.color);
+    }
+    var transform = new AffineTransform();
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform);
     if (this.fill) {
       graphics.fillRect(this.x + xAdj, this.y + yAdj, this.side, this.side);
     } else {
       graphics.drawRect(this.x + xAdj, this.y + yAdj, this.side, this.side);
     }
+     var transform2 = new AffineTransform();
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform2);
+    //graphics.rotate(-Math.toRadians(rotation), -this.x - xAdj, -this.y - yAdj);
+    
   }
   
   override def duplicate(newName: String): Square = {
@@ -299,12 +339,20 @@ class Triangle extends Shape {
   }
   
   override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
-    graphics.setColor(this.color);
+    if (!sparkle) {
+      graphics.setColor(this.color);
+    }
+    var transform = new AffineTransform();
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform);
     if (this.fill) {
 		  graphics.fillPolygon(getTriangleX(x, y, height, base, xAdj), getTriangleY(x, y, height, base, yAdj), 3);
     } else {
 		  graphics.drawPolygon(getTriangleX(x, y, height, base, xAdj), getTriangleY(x, y, height, base, yAdj), 3);
     }
+     var transform2 = new AffineTransform();
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform2);
   }
   
   override def duplicate(newName: String): Triangle = {
@@ -350,12 +398,17 @@ class Polygon extends Shape {
   
   override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
+    var transform = new AffineTransform();
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform);
     if(this.fill) {
       graphics.fillPolygon(generatePolyX(x, side, numPoints), generatePolyY(y, side, numPoints), numPoints)
     } else {
       graphics.drawPolygon(generatePolyX(x, side, numPoints), generatePolyY(y, side, numPoints), numPoints)
     }
-    
+    var transform2 = new AffineTransform();
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform2);
   }
   private def generatePolyX(x:Int, side:Int, numPoints:Int):Array[Int] = {
     val xVals:Array[Int] = new Array(numPoints);
@@ -423,11 +476,17 @@ class Squiggle extends Shape {
   
   override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
+    var transform = new AffineTransform();
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform);
     if(this.vert)
       VertSquiggle(graphics, xAdj+this.x, yAdj+this.y, this.height, this.width, this.numPeriods, this.thickness);
     else
       HorSquiggle(graphics, yAdj+this.y, xAdj+this.x, this.height, this.width, this.numPeriods, this.thickness);
-
+    
+    var transform2 = new AffineTransform();
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform2);
   }
    def VertSquiggle(g:Graphics2D, x:Int, y:Int, height:Int, width:Int, numPeriods:Double, thickness:Int) {
       //where precision represents the number of points in a period to generate
@@ -612,9 +671,15 @@ class Composite extends BaseShape {
   }
   
   def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
+    var transform = new AffineTransform();
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform);
     for (i <- 0 to shapes.size() - 1) {
       shapes.get(i).draw(graphics, xAdj, yAdj);
     }
+    var transform2 = new AffineTransform();
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    graphics.transform(transform2);
   }
   
   def duplicate(newName: String): BaseShape = {
@@ -638,8 +703,11 @@ class Composite extends BaseShape {
 class CommandRead {
   var panelMap: Map[String, DrawingPanel] = new HashMap[String, DrawingPanel]();
   var shapeMap: Map[String, BaseShape] = new HashMap[String, BaseShape]();
+  var varMap: Map[String, Int] = new HashMap[String, Int]();
+  var bang: TexturePaint = new TexturePaint(ImageIO.read(new File("Sparkle.jpg")), new java.awt.Rectangle(0, 0, 400, 400));
   
-  object UPDATE {
+  
+  object GET {
     def CIRCLE(circleName: String): Circle = {
       return shapeMap.get(circleName).asInstanceOf[Circle];
     }
@@ -738,8 +806,15 @@ class CommandRead {
       if (panelMap.containsKey(panelName) && shapeMap.containsKey(shapeName)) {
         var shape: BaseShape = shapeMap.get(shapeName);
         var graphics: Graphics2D = panelMap.get(panelName).getGraphics();
+        var temp = graphics.getPaint();
+        
+        graphics.setPaint(bang);
         shape.draw(graphics, x, y);
+        graphics.setPaint(temp);
       }
+    }
+    def apply(shapeName: String, panelName: String) {
+      apply(shapeName, panelName, 0, 0);
     }
   }
   
@@ -766,6 +841,29 @@ class CommandRead {
       newComp.duplicate = duplicate;
       newComp.shapeMap = shapeMap;
       return newComp;
+    }
+  }
+  
+  object GETVAR {
+    def apply(varName: String): Int = {
+      return varMap.get(varName);
+    }
+  }
+  
+  object SETVAR {
+    def apply(varName: String, value: Int) = {
+      varMap.put(varName, value);
+    }
+  }
+  
+  object PATTERN {
+    def apply(varName: String, limit: Int)(body: => Unit) {
+      var currIndex: Int = GETVAR(varName);
+      if (currIndex <= limit) {
+        body
+        SETVAR(varName, currIndex + 1)
+        apply(varName, limit)(body);
+      }
     }
   }
 }

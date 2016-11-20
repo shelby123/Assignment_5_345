@@ -51,6 +51,8 @@ abstract class BaseShape {
   var x: Int = 0;
   var y: Int = 0;
   var rotation: Int = 0;
+  var scaleX: Double = 1.0d;
+  var scaleY: Double = 1.0d;
 
   def AT(x: Int, y: Int): this.type = {
     this.x = x;
@@ -68,22 +70,40 @@ abstract class BaseShape {
     return this;
   }
   
-  //def scale(factor: Int): this.type
+  def SCALEX(factor: Double): this.type = {
+    this.scaleX = factor;
+    return this;
+  }
   
-
+  def SCALEY(factor: Double): this.type = {
+    this.scaleY = factor;
+    return this;
+  }
+  
+  def SCALE(factorX: Double, factorY: Double): this.type = {
+    this.scaleX = factorX;
+    this.scaleY = factorY;
+    return this;
+  }
+  
+  def SCALE(factor: Double): this.type = {
+    this.scaleX = factor;
+    this.scaleY = factor;
+    return this;
+  }
+  
   def SETROTATE(rotation: Int): this.type = {
     this.rotation = rotation;
     return this;
   }
-	
-	
-  /*def UPDATE : this.type = {
-    return this;
-  }*/
   
   def duplicate(newName: String): BaseShape
   
   def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int)
+  
+  def getBoundingWidth(): Int;
+  
+  def getBoundingHeight(): Int;
   
   def >>(shift: Int) : this.type = {
     this.x += shift;
@@ -103,6 +123,23 @@ abstract class BaseShape {
   def vv(shift: Int) : this.type = {
     this.y += shift;
     return this;
+  }
+  
+  def *(factor: Double): this.type = {
+    this.scaleX *= factor;
+    this.scaleY *= factor;
+    return this;
+  }
+  
+  def /(factor: Double): this.type = {
+    this.scaleX /= factor;
+    this.scaleY /= factor;
+    return this;
+  }
+  
+  def %(angle: Int): this.type = {
+    this.rotation += angle;
+    return this
   }
 }
 
@@ -141,7 +178,92 @@ abstract class Shape extends BaseShape {
 
 
 
-
+class Line extends BaseShape {
+  var length: Int = 0;
+  var destX: Int = 0;
+  var destY: Int = 0;
+  var color: Color = new Color(0, 0, 0);
+  var colorMap:Colors = new Colors();
+  
+  def DESTAT(x: Int, y: Int): this.type = {
+    this.destX = x;
+    this.destY = y;
+    return this;
+  }
+  
+  def SETDESTX(x: Int): this.type = {
+    this.destX = x;
+    return this;
+  }
+  
+  def SETDESTY(y: Int): this.type = {
+    this.destY = y;
+    return this;
+  }
+  
+  def SETLINE(originX: Int, originY: Int, destX: Int, destY: Int): this.type = {
+    this.x = originX;
+    this.y = originY;
+    this.destX = destX;
+    this.destY = destY;
+    return this;
+  }
+  
+  def SETLINEANGULAR(originX: Int, originY: Int, theta: Int, magnitude: Int): this.type = {
+    this.x = originX;
+    this.y = originY;
+    this.destX = (x + (magnitude * Math.cos(Math.toRadians(theta)))).toInt;
+    this.destY = (y + (magnitude * Math.sin(Math.toRadians(theta)))).toInt;
+    return this;
+  }
+  
+  def COLOR(r: Int, g: Int, b: Int): this.type = {
+    this.color = new Color(r, g, b);
+    return this;
+  }
+  
+  def COLOR(color: String): this.type = {
+    this.color = new Color(colorMap.getNumber(color));
+    return this;
+  }
+  
+  def duplicate(newName: String): Line = {
+    var newLine: Line = new Line();
+    
+    newLine.name = newName;
+    newLine.x = this.x;
+    newLine.y = this.y;
+    newLine.rotation = this.rotation;
+    newLine.scaleX = this.scaleX;
+    newLine.scaleY = this.scaleY;
+    
+    newLine.destX = this.destX;
+    newLine.destY = this.destY;
+    newLine.color = this.color;
+    return newLine;
+  }
+  
+  def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
+    graphics.setColor(this.color);
+    var transform = new AffineTransform();
+    transform.scale(scaleX, scaleY);
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj + getBoundingWidth() / 2, this.y + yAdj + getBoundingHeight() / 2);
+    graphics.transform(transform);
+    graphics.drawLine(x, y, destX, destY);
+    var transform2 = new AffineTransform();
+    transform2.scale(1 / scaleX, 1 / scaleY);
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj + getBoundingWidth() / 2, this.y + yAdj + getBoundingHeight() / 2);
+    graphics.transform(transform2);
+  }
+  
+  def getBoundingWidth(): Int = {
+    return Math.abs(destX - x);
+  }
+  
+  def getBoundingHeight(): Int = {
+    return Math.abs(destY - y);
+  }
+}
 
 class Circle extends Shape {
   var radius: Int = 0;
@@ -154,15 +276,17 @@ class Circle extends Shape {
   override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
     var transform = new AffineTransform();
-    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform.scale(scaleX, scaleY);
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj + radius, this.y + yAdj + radius);
     graphics.transform(transform);
     if (this.fill) {
-      graphics.fillOval(this.x + xAdj, this.y + yAdj, radius * 2, radius * 2);
+      graphics.fillOval(((this.x + xAdj) / scaleX).toInt, ((this.y + yAdj) / scaleY).toInt, radius * 2, radius * 2);
     } else {
-      graphics.drawOval(this.x + xAdj, this.y + yAdj, radius * 2, radius * 2);
+      graphics.drawOval(((this.x + xAdj) / scaleX).toInt, ((this.y + yAdj) / scaleY).toInt, radius * 2, radius * 2);
     }
      var transform2 = new AffineTransform();
-    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform2.scale(1 / scaleX, 1 / scaleY);
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj + radius, this.y + yAdj + radius);
     graphics.transform(transform2);
   }
   
@@ -172,11 +296,23 @@ class Circle extends Shape {
     newCircle.name = newName;
     newCircle.x = this.x;
     newCircle.y = this.y;
+    newCircle.rotation = this.rotation;
+    newCircle.scaleX = this.scaleX;
+    newCircle.scaleY = this.scaleY;
     newCircle.color = this.color;
     newCircle.fill = this.fill;
+    newCircle.sparkle = this.sparkle;
     
     newCircle.radius = this.radius;
     return newCircle;
+  }
+  
+  override def getBoundingWidth(): Int = {
+    return (radius * 2 * scaleX).toInt;
+  }
+  
+  override def getBoundingHeight(): Int = {
+    return (radius * 2 * scaleY).toInt;
   }
 }
 
@@ -202,15 +338,17 @@ class Oval extends Shape {
   override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
     var transform = new AffineTransform();
-    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform.scale(scaleX, scaleY);
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj + radiusX, this.y + yAdj + radiusY);
     graphics.transform(transform);
     if (this.fill) {
-      graphics.fillOval(this.x + xAdj, this.y + yAdj, radiusX * 2, radiusY * 2);
+      graphics.fillOval(((this.x + xAdj) / scaleX).toInt, ((this.y + yAdj) / scaleY).toInt, radiusX * 2, radiusY * 2);
     } else {
-      graphics.drawOval(this.x + xAdj, this.y + yAdj, radiusX * 2, radiusY * 2);
+      graphics.drawOval(((this.x + xAdj) / scaleX).toInt, ((this.y + yAdj) / scaleY).toInt, radiusX * 2, radiusY * 2);
     }
     var transform2 = new AffineTransform();
-    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform2.scale(1 / scaleX, 1 / scaleY);
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj + radiusX, this.y + yAdj + radiusY);
     graphics.transform(transform2);
   }
   
@@ -220,12 +358,24 @@ class Oval extends Shape {
     newOval.name = newName;
     newOval.x = this.x;
     newOval.y = this.y;
+    newOval.rotation = this.rotation;
+    newOval.scaleX = this.scaleX;
+    newOval.scaleY = this.scaleY;
     newOval.color = this.color;
     newOval.fill = this.fill;
+    newOval.sparkle = this.sparkle;
     
     newOval.radiusX = this.radiusX;
     newOval.radiusY = this.radiusY;
     return newOval;
+  }
+  
+  override def getBoundingWidth(): Int = {
+    return (radiusX * 2 * scaleX).toInt;
+  }
+  
+  override def getBoundingHeight(): Int = {
+    return (radiusY * 2 * scaleY).toInt;
   }
 }
 
@@ -250,15 +400,17 @@ class Rectangle extends Shape {
   override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
     var transform = new AffineTransform();
-    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform.scale(scaleX, scaleY);
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj + (width / 2), this.y + yAdj + (height / 2));
     graphics.transform(transform);
     if (this.fill) {
-      graphics.fillRect(this.x + xAdj, this.y + yAdj, this.width, this.height);
+      graphics.fillRect(((this.x + xAdj) / scaleX).toInt, ((this.y + yAdj) / scaleY).toInt, this.width, this.height);
     } else {
-      graphics.drawRect(this.x + xAdj, this.y + yAdj, this.width, this.height);
+      graphics.drawRect(((this.x + xAdj) / scaleX).toInt, ((this.y + yAdj) / scaleY).toInt, this.width, this.height);
     }
     var transform2 = new AffineTransform();
-    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform2.scale(1 / scaleX, 1 / scaleY);
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj + (width / 2), this.y + yAdj + (height / 2));
     graphics.transform(transform2);
     
   }
@@ -269,12 +421,24 @@ class Rectangle extends Shape {
     newRect.name = newName;
     newRect.x = this.x;
     newRect.y = this.y;
+    newRect.rotation = this.rotation;
+    newRect.scaleX = this.scaleX;
+    newRect.scaleY = this.scaleY;
     newRect.color = this.color;
     newRect.fill = this.fill;
+    newRect.sparkle = this.sparkle;
     
     newRect.width = this.width;
     newRect.height = this.height;
     return newRect;
+  }
+  
+  override def getBoundingWidth(): Int = {
+    return (width * scaleX).toInt;
+  }
+  
+  override def getBoundingHeight(): Int = {
+    return (height * scaleY).toInt;
   }
 }
 
@@ -291,15 +455,18 @@ class Square extends Shape {
       graphics.setColor(this.color);
     }
     var transform = new AffineTransform();
-    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform.scale(scaleX, scaleY);
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj + (side / 2), this.y + yAdj + (side / 2));
     graphics.transform(transform);
     if (this.fill) {
-      graphics.fillRect(this.x + xAdj, this.y + yAdj, this.side, this.side);
+      graphics.fillRect(((this.x + xAdj) / scaleX).toInt, ((this.y + yAdj) / scaleY).toInt, this.side, this.side);
     } else {
-      graphics.drawRect(this.x + xAdj, this.y + yAdj, this.side, this.side);
+      graphics.drawRect(((this.x + xAdj) / scaleX).toInt, ((this.y + yAdj) / scaleY).toInt, this.side, this.side);
     }
-     var transform2 = new AffineTransform();
-    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    var transform2 = new AffineTransform();
+    transform2.scale(1 / scaleX, 1 / scaleY);
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj + (side / 2), this.y + yAdj + (side / 2));
+    
     graphics.transform(transform2);
     //graphics.rotate(-Math.toRadians(rotation), -this.x - xAdj, -this.y - yAdj);
     
@@ -311,11 +478,23 @@ class Square extends Shape {
     newSquare.name = newName;
     newSquare.x = this.x;
     newSquare.y = this.y;
+    newSquare.rotation = this.rotation;
+    newSquare.scaleX = this.scaleX;
+    newSquare.scaleY = this.scaleY;
     newSquare.color = this.color;
     newSquare.fill = this.fill;
+    newSquare.sparkle = this.sparkle;
     
     newSquare.side = this.side;
     return newSquare;
+  }
+  
+  override def getBoundingWidth(): Int = {
+    return (side * scaleX).toInt;
+  }
+  
+  override def getBoundingHeight(): Int = {
+    return (side * scaleY).toInt;
   }
 }
 
@@ -343,7 +522,8 @@ class Triangle extends Shape {
       graphics.setColor(this.color);
     }
     var transform = new AffineTransform();
-    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform.scale(scaleX, scaleY);
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj + (base / 2), this.y + yAdj + (height / 2));
     graphics.transform(transform);
     if (this.fill) {
 		  graphics.fillPolygon(getTriangleX(x, y, height, base, xAdj), getTriangleY(x, y, height, base, yAdj), 3);
@@ -351,7 +531,8 @@ class Triangle extends Shape {
 		  graphics.drawPolygon(getTriangleX(x, y, height, base, xAdj), getTriangleY(x, y, height, base, yAdj), 3);
     }
      var transform2 = new AffineTransform();
-    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform2.scale(1 / scaleX, 1 /scaleY);
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj + (base / 2), this.y + yAdj + (height / 2));
     graphics.transform(transform2);
   }
   
@@ -361,8 +542,12 @@ class Triangle extends Shape {
     newTri.name = newName;
     newTri.x = this.x;
     newTri.y = this.y;
+    newTri.rotation = this.rotation;
+    newTri.scaleX = this.scaleX;
+    newTri.scaleY = this.scaleY;
     newTri.color = this.color;
     newTri.fill = this.fill;
+    newTri.sparkle = this.sparkle;
     
     newTri.base = this.base;
     newTri.height = this.height;
@@ -370,10 +555,18 @@ class Triangle extends Shape {
   }
   
   private def getTriangleX(x: Int, y: Int, height: Int, base: Int, xAdj: Int): Array[Int] = {
-    return Array(x + xAdj, x + base + xAdj, x + (base * 1.0 / 2).toInt + xAdj);
+    return Array(((x + xAdj) / scaleX).toInt, ((x + base + xAdj) / scaleX).toInt, ((x + (base * 1.0 / 2).toInt + xAdj) / scaleX).toInt);
   }
   private def getTriangleY(x: Int, y: Int, height: Int, base: Int, yAdj: Int): Array[Int] = {
-    return Array(y + height + yAdj, y + height + yAdj, y + yAdj);
+    return Array(((y + height + yAdj) / scaleY).toInt, ((y + height + yAdj) / scaleY).toInt, ((y + yAdj) / scaleY).toInt);
+  }
+  
+  override def getBoundingWidth(): Int = {
+    return (base * scaleX).toInt;
+  }
+  
+  override def getBoundingHeight(): Int = {
+    return (height * scaleY).toInt;
   }
 }
 
@@ -399,7 +592,8 @@ class Polygon extends Shape {
   override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
     var transform = new AffineTransform();
-    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform.scale(scaleX, scaleY);
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj + (side / 2), this.y + yAdj + (side / 2));
     graphics.transform(transform);
     if(this.fill) {
       graphics.fillPolygon(generatePolyX(x, side, numPoints), generatePolyY(y, side, numPoints), numPoints)
@@ -407,20 +601,21 @@ class Polygon extends Shape {
       graphics.drawPolygon(generatePolyX(x, side, numPoints), generatePolyY(y, side, numPoints), numPoints)
     }
     var transform2 = new AffineTransform();
-    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform2.scale(1 / scaleX, 1 / scaleY);
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj + (side / 2), this.y + yAdj + (side / 2));
     graphics.transform(transform2);
   }
   private def generatePolyX(x:Int, side:Int, numPoints:Int):Array[Int] = {
     val xVals:Array[Int] = new Array(numPoints);
     for(i <- 0 to (numPoints - 1) ) {
-      xVals(i) = (x + side*Math.cos(2*Math.PI * ((i+1.0)/numPoints) + Math.PI/2) + side).toInt; 
+      xVals(i) = ((x + side*Math.cos(2*Math.PI * ((i+1.0)/numPoints) + Math.PI/2) + side) / scaleX).toInt; 
     }
     return xVals;
   }
   private def generatePolyY(y:Int, side:Int, numPoints:Int):Array[Int] = {
     val yVals:Array[Int] = new Array(numPoints);
     for(i <- 0 to (numPoints - 1) ) {
-      yVals(i) = (y+ side*Math.sin(2*Math.PI * ((i+1.0)/numPoints) - Math.PI/2) + side).toInt; 
+      yVals(i) = ((y+ side*Math.sin(2*Math.PI * ((i+1.0)/numPoints) - Math.PI/2) + side) / scaleY).toInt; 
     }
     return yVals;
   }
@@ -431,12 +626,24 @@ class Polygon extends Shape {
     newPoly.name = newName;
     newPoly.x = this.x;
     newPoly.y = this.y;
+    newPoly.rotation = this.rotation;
+    newPoly.scaleX = this.scaleX;
+    newPoly.scaleY = this.scaleY;
     newPoly.color = this.color;
     newPoly.fill = this.fill;
+    newPoly.sparkle = this.sparkle;
     
     newPoly.numPoints = this.numPoints;
     newPoly.side = this.side;
     return newPoly;
+  }
+  
+  override def getBoundingWidth(): Int = {
+    return (side * scaleX).toInt;
+  }
+  
+  override def getBoundingHeight(): Int = {
+    return (side * scaleY).toInt;
   }
 }
 
@@ -477,7 +684,8 @@ class Squiggle extends Shape {
   override def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
     graphics.setColor(this.color);
     var transform = new AffineTransform();
-    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform.scale(scaleX, scaleY);
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj + (width / 2), this.y + yAdj + (height / 2));
     graphics.transform(transform);
     if(this.vert)
       VertSquiggle(graphics, xAdj+this.x, yAdj+this.y, this.height, this.width, this.numPeriods, this.thickness);
@@ -485,6 +693,7 @@ class Squiggle extends Shape {
       HorSquiggle(graphics, yAdj+this.y, xAdj+this.x, this.height, this.width, this.numPeriods, this.thickness);
     
     var transform2 = new AffineTransform();
+    transform2.scale(1 / scaleX, 1 / scaleY);
     transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
     graphics.transform(transform2);
   }
@@ -519,6 +728,10 @@ class Squiggle extends Shape {
       for(i<- halfLength+1 to length2-1) {
         xVals(i) = xVals(length2-i) + offset;
       }
+      
+      for (i <- 0 to length2 - 1) {
+        xVals(i) = (xVals(i) / scaleX).toInt;
+      }
       return xVals;
   }
   private def findSquiggleConstant(y:Int, height:Int, numPeriods:Double, precision:Int):Array[Int] =  {
@@ -534,6 +747,10 @@ class Squiggle extends Shape {
         yVals(i) = currentY;
         currentY = currentY - (height*1.0/halfLength).toInt;
       }
+      
+      for (i <- 0 to length - 1) {
+        yVals(i) = (yVals(i) / scaleY).toInt;
+      }
       return yVals;
   }   
   
@@ -543,8 +760,12 @@ class Squiggle extends Shape {
     newSquiggle.name = newName;
     newSquiggle.x = this.x;
     newSquiggle.y = this.y;
+    newSquiggle.rotation = this.rotation;
+    newSquiggle.scaleX = this.scaleX;
+    newSquiggle.scaleY = this.scaleY;
     newSquiggle.color = this.color;
     newSquiggle.fill = this.fill;
+    newSquiggle.sparkle = this.sparkle;
     
     newSquiggle height= this.height;
     newSquiggle width = this.width;
@@ -552,6 +773,14 @@ class Squiggle extends Shape {
     newSquiggle thickness = this.thickness;
     newSquiggle vert = this.vert;
     return newSquiggle;
+  }
+  
+  override def getBoundingWidth(): Int = {
+    return (width * scaleX).toInt;
+  }
+  
+  override def getBoundingHeight(): Int = {
+    return (height * scaleY).toInt;
   }
 }
 
@@ -671,14 +900,18 @@ class Composite extends BaseShape {
   }
   
   def draw(graphics: Graphics2D, xAdj: Int, yAdj: Int) {
+    var centerX: Int = getBoundingWidth() / 2;
+    var centerY: Int = getBoundingHeight() / 2;
     var transform = new AffineTransform();
-    transform.rotate(Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform.scale(scaleX, scaleY);
+    transform.rotate(Math.toRadians(rotation), this.x + xAdj + centerX, this.y + yAdj + centerY);
     graphics.transform(transform);
     for (i <- 0 to shapes.size() - 1) {
-      shapes.get(i).draw(graphics, xAdj, yAdj);
+      shapes.get(i).draw(graphics, (xAdj / scaleX).toInt, (yAdj / scaleY).toInt);
     }
     var transform2 = new AffineTransform();
-    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj, this.y + yAdj);
+    transform.scale(1 / scaleX, 1 / scaleY);
+    transform2.rotate(-Math.toRadians(rotation), this.x + xAdj + centerX, this.y + yAdj + centerX);
     graphics.transform(transform2);
   }
   
@@ -688,6 +921,9 @@ class Composite extends BaseShape {
     newComp.name = newName;
     newComp.x = this.x;
     newComp.y = this.y;
+    newComp.rotation = this.rotation;
+    newComp.scaleX = this.scaleX;
+    newComp.scaleY = this.scaleY;
     
     for (i <- 1 to shapes.size()) {
       var currShape: BaseShape = shapes.get(shapes.size - i); 
@@ -695,6 +931,44 @@ class Composite extends BaseShape {
     }
     
     return newComp;
+  }
+  
+  override def getBoundingWidth(): Int = {
+    var minX: Int = Int.MaxValue;
+    var maxX: Int = Int.MinValue;
+    for (i <- 0 to shapes.size - 1) {
+      var currShape = shapes.get(i);
+      var currX: Int = currShape.x;
+      var currWidth: Int = currShape.getBoundingWidth();
+      //min case
+      if (currX < minX) {
+        minX = currX;
+      }
+      //max case
+      if (currX + currWidth > maxX) {
+        maxX = currX + currWidth;
+      }
+    }
+    return maxX - minX;
+  }
+  
+  override def getBoundingHeight(): Int = {
+    var minY: Int = Int.MaxValue;
+    var maxY: Int = Int.MinValue;
+    for (i <- 0 to shapes.size - 1) {
+      var currShape = shapes.get(i);
+      var currY: Int = currShape.y;
+      var currHeight: Int = currShape.getBoundingHeight();
+      //min case
+      if (currY < minY) {
+        minY = currY;
+      }
+      //max case
+      if (currY + currHeight > maxY) {
+        maxY = currY + currHeight;
+      }
+    }
+    return maxY - minY;
   }
 }
 
@@ -738,6 +1012,10 @@ class CommandRead {
     
     def COMPOSITE(compositeName: String): Composite = {
       return shapeMap.get(compositeName).asInstanceOf[Composite];
+    }
+
+    def LINE(compositeName: String): Line = {
+      return shapeMap.get(compositeName).asInstanceOf[Line];
     }
   }
   
@@ -801,6 +1079,15 @@ class CommandRead {
     }
   }
   
+  object NEWLINE {
+    def WITHNAME(parameterName: String): Line = {
+      var newLine: Line = new Line();
+      newLine.name = parameterName;
+      shapeMap.put(parameterName, newLine);
+      return newLine;
+    }
+  }
+  
   object DRAWTOPANEL {
     def apply(shapeName: String, panelName: String, x: Int, y: Int) {
       if (panelMap.containsKey(panelName) && shapeMap.containsKey(shapeName)) {
@@ -857,13 +1144,16 @@ class CommandRead {
   }
   
   object PATTERN {
-    def apply(varName: String, limit: Int)(body: => Unit) {
+    def apply(varName: String, limit: Int, step: Int)(body: => Unit) {
       var currIndex: Int = GETVAR(varName);
       if (currIndex <= limit) {
         body
-        SETVAR(varName, currIndex + 1)
-        apply(varName, limit)(body);
+        SETVAR(varName, currIndex + step)
+        apply(varName, limit, step)(body);
       }
+    }
+    def apply(varName: String, limit: Int)(body: => Unit) {
+      apply(varName, limit, 1)(body);
     }
   }
 }

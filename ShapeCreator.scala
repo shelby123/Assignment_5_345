@@ -1017,6 +1017,9 @@ class CommandRead {
     def LINE(compositeName: String): Line = {
       return shapeMap.get(compositeName).asInstanceOf[Line];
     }
+		def ORGANIC(organicName: String): Organic = {
+     	return shapeMap.get(organicName).asInstanceOf[Organic];
+    }
   }
   
   object NEWCIRCLE {
@@ -1085,6 +1088,14 @@ class CommandRead {
       newLine.name = parameterName;
       shapeMap.put(parameterName, newLine);
       return newLine;
+    }
+  }
+  object NEWORGANIC {
+    def WITHNAME(parameterName: String): Organic = {
+      var newOrganic: Organic = new Organic();
+      newOrganic.name = parameterName;
+      shapeMap.put(parameterName, newOrganic);
+      return newOrganic;
     }
   }
   

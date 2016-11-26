@@ -846,6 +846,9 @@ class Composite extends BaseShape {
   def GETCOMPOSITE(compName: String): Composite = {
     return get(compName).asInstanceOf[Composite];
   }
+	 def GETORGANIC(organicName: String): Organic = {
+    return get(organicName).asInstanceOf[Organic];
+  }
   
   def ADD(shapeName: String, duplicate: String) {
     addShape(shapeMap.get(shapeName), shapeName, "DUPLICATE".equals(duplicate.toUpperCase()));

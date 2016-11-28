@@ -34,15 +34,13 @@ WOW! That was easy!!
 ### Operations for defining shapes:
 Rotate  
 Scale  
-	*Stretch horizontally   
-	*Stretch vertically  
-	*Scale proportionally (i.e. make it 2 times bigger)  
+	Stretch horizontally   
+	Stretch vertically  
+	Scale proportionally (i.e. make it 2 times bigger)  
 Recolor  
-	*Change hue  
-	*Color completely (Monochrome)  
-	*Black and white? Sepia?  
-Change base shapes   
-	*I.e. if you have a figure containing circles, you could say something like circle -> square and any circles in the figure would become squares  
+	Change hue  
+	Color completely (Monochrome)  
+	Black and white, Sepia  
   
   
 ### Operations for screen display:  
@@ -50,7 +48,4 @@ Move
 Create  
 Delete  
 Rotate   
-Pattern (Example: functionality for redefining loops)  
-Recoloring the entire screen (i.e. making the entire panel black and white)  
-Stretching/ scaling the entire screen   
-(These operations are giving me a vector-graphics kind of feel, lol)  
+Pattern

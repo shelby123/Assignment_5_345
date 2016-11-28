@@ -31,21 +31,12 @@ PATTERN("i", 5) {
 WOW! That was easy!!  
 
 ## Dive into the details:
-### Operations for defining shapes:
-Rotate  
-Scale  
-	Stretch horizontally   
-	Stretch vertically  
-	Scale proportionally (i.e. make it 2 times bigger)  
-Recolor  
-	Change hue  
-	Color completely (Monochrome)  
-	Black and white, Sepia  
-  
-  
-### Operations for screen display:  
-Move  
-Create  
-Delete  
-Rotate   
-Pattern
+CREATE
+COLOR
+SIZE
+ROTATE
+SCALE
+OPERATORS
+LOOPS
+A SPECIAL SURPRISE
+

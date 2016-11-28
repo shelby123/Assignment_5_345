@@ -31,11 +31,11 @@ PATTERN("i", 5) {
 WOW! That was easy!!  
 
 ## Dive into the details:
-CREATE
-COLOR
-SIZE
-ROTATE
-SCALE
+..*CREATE   
+..*COLOR  
+..*SIZE  
+..*ROTATE  
+..*SCALE  
 OPERATORS
 LOOPS
 A SPECIAL SURPRISE

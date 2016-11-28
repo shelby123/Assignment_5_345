@@ -11,16 +11,24 @@ Easy to use, yet complex in design.  PolyGO takes away all the difficulty of pro
   
   
 ## Just take a look at PolyGO:
-  
-PANEL panel 640 480  
-NEWCIRCLE WITHNAME redCircle AT x y DIMENSIONS height width COLOR #ff0000  
-UPDATECIRCLE redCircle FILLSTATE outline  
-MAKE stickFigure FROM (redCircle, square, ...)  
-MAKE superStickFigure FROM (stickFigure, etc…)  
-MAKE exampleShapes BIND circles [1, 2, 3]? (let 1, 2, 3 define parameters of circles)  
-SCALE stickFigure?  
-DRAWTOPANEL redCircle  
-  
+```scala
+NEWRECT WITHNAME "FORKBASE" AT (250,140) WIDTH 8 HEIGHT 70 COLOR "Gray"
+NEWRECT WITHNAME "FORKSIDE" AT (240,140) WIDTH 28 HEIGHT 8 COLOR "Gray"
+NEWRECT WITHNAME "FORKPRONG1" AT (240,120) WIDTH 8 HEIGHT 20 COLOR "Gray"
+NEWRECT WITHNAME "FORKPRONG2" AT (250,120) WIDTH 8 HEIGHT 20 COLOR "Gray"
+NEWRECT WITHNAME "FORKPRONG3" AT (260,120) WIDTH 8 HEIGHT 20 COLOR "Gray"
+MAKE DUPLICATE "FORK" FROM ("FORKBASE", "FORKSIDE", "FORKPRONG1", "FORKPRONG2", "FORKPRONG3")
+    
+MAKE DUPLICATE "KNIFE"
+NEWRECT WITHNAME "KNIFEBASE" AT (287, 121) WIDTH 8 HEIGHT 89 COLOR "Gray"
+GET COMPOSITE "KNIFE" ADD "KNIFEBASE"
+SETVAR("i", 1)
+PATTERN("i", 5) {
+  NEWTRI WITHNAME "T" AT (280, GETVAR("i") * 10 + 110) BASE 10 HEIGHT 10 SETROTATE 25 COLOR "Gray"
+  GET COMPOSITE "KNIFE" ADD "T"
+}    
+```
+
 ## Dive into the details:
 ### Operations for defining shapes:
 Rotate  

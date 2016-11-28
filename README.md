@@ -28,21 +28,21 @@ PATTERN("i", 5) {
   GET COMPOSITE "KNIFE" ADD "T"
 }    
 ```
+WOW! That was easy!!  
 
 ## Dive into the details:
 ### Operations for defining shapes:
 Rotate  
 Scale  
-	Stretch horizontally   
-	Stretch vertically  
-	Scale proportionally (i.e. make it 2 times bigger)  
+	*Stretch horizontally   
+	*Stretch vertically  
+	*Scale proportionally (i.e. make it 2 times bigger)  
 Recolor  
-	Change hue  
-	Color completely (Monochrome)  
-	Black and white? Sepia?  
+	*Change hue  
+	*Color completely (Monochrome)  
+	*Black and white? Sepia?  
 Change base shapes   
-	I.e. if you have a figure containing circles, you could say something like circle -> square  
-and any circles in the figure would become squares  
+	*I.e. if you have a figure containing circles, you could say something like circle -> square and any circles in the figure would become squares  
   
   
 ### Operations for screen display:  

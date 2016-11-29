@@ -348,3 +348,12 @@ orange 16754176
 brown 6572052
 purple 8388736
 blue 255
+presentation Yellow 16300800
+presentation Orange 15550976
+presentation blue 44227
+presentation fuscia 15204428
+presentation green 6667080
+presentation aqua 53702
+presentation gray 6388358
+presentation lime 12307712
+presentation light gray 10600140
